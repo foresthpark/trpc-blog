@@ -1,0 +1,747 @@
+type AnswerType {
+  question: QuestionType!
+  choice: ChoiceType!
+  isCorrect: Boolean!
+  correctAnswer: ChoiceType
+}
+
+type AssignmentType {
+  id: ID!
+
+  """This is for the admin to know the order."""
+  number: Int!
+
+  """Assignment Instructions"""
+  instructions: String!
+
+  """Solution Explanation"""
+  solutionExplanation: String
+
+  """Hints"""
+  hints: String
+  blueprintUrl: String
+  solutionUrl: String
+  allowedDomains: String!
+  quiz: QuizType
+  days: [DayType!]!
+}
+
+type BadgeType {
+  id: ID!
+  name: String!
+  image: String
+  isUnlocked: Boolean!
+}
+
+type CategoryType {
+  id: ID!
+  name: String!
+  tagline: String!
+  slug: String!
+  isPublic: Boolean!
+  totalThreads: Int
+  hasDot: Boolean
+}
+
+type CertificateType {
+  created: DateTime!
+  uuid: String!
+  master: CertificationType!
+  user: UserType!
+}
+
+"""An enumeration."""
+enum CertificationKind {
+  """Challenge"""
+  CHALLENGE
+
+  """Course"""
+  COURSE
+}
+
+type CertificationType {
+  name: String!
+  kind: CertificationKind!
+  tech: String
+  course: CourseType
+  challenge: ChallengeType
+}
+
+type ChallengeFAQType {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  question: String!
+  answer: String!
+  order: Int!
+}
+
+type ChallengeType {
+  name: String!
+  tagline: String!
+  slug: String!
+  duration: String!
+  startDate: Float
+  finishDate: Float
+  nextStartDate: Float
+  nextFinishDate: Float
+  batch: Int!
+  isPublic: Boolean!
+  course: CourseType
+
+  """Waitlist Page"""
+  waitlistPage: String
+
+  """Enrolled Page"""
+  enrolledPage: String
+
+  """Failed Page"""
+  failedPage: String
+
+  """Finished Page"""
+  finishedPage: String
+
+  """Admin Text"""
+  adminText: String
+  unlocks: [BadgeType!]!
+  isBookChallenge: Boolean!
+  isPremiumChallenge: Boolean!
+  premiumChallengeCourses: [CourseType!]!
+  links: [LinkType!]!
+  isEnrolled: Boolean
+  isWaiting: Boolean
+  isCompleted: Boolean
+  isOnReview: Boolean
+  canEnroll: Boolean
+  challengersNumber: Int
+  currentDay: Int
+  day: DayType
+  submission: SubmissionType
+  inProgress: Boolean
+  finished: Boolean
+  comingSoon: Boolean
+  assignmentsNumber: Int
+  totalDays: Int
+  isFailed: Boolean
+  inBufferZone: Boolean
+  waitingNumber: Int
+}
+
+type CheckNicePaymentMutation {
+  enrollment: EnrollmentType
+  tId: String
+}
+
+type ChildReplyType {
+  created: DateTime!
+  id: ID!
+  user: UserType!
+  payload: String!
+  isOwner: Boolean!
+}
+
+type ChoiceType {
+  id: ID!
+
+  """140 max."""
+  choice: String!
+}
+
+type CommentMutation {
+  comment: CommentType
+}
+
+type CommentOnIssueMutation {
+  comment: IssueCommentType
+}
+
+type CommentType {
+  created: DateTime!
+  id: ID!
+  parent: CommentType
+  user: UserType!
+  lecture: LectureType!
+  content: String!
+  isTestimonial: Boolean
+  replies: [CommentType!]!
+  upvotes: Int
+  isOwner: Boolean
+  isUpvoted: Boolean
+  absoluteUrl: String
+}
+
+type CompleteCourseMutation {
+  certificate: CertificateType
+}
+
+type CompletionType {
+  created: DateTime!
+  user: UserType!
+}
+
+type CouponByCodeMutation {
+  coupon: CouponType
+}
+
+type CouponType {
+  created: DateTime!
+  id: ID!
+
+  """In Percentage (%)"""
+  discountAmount: Int!
+  used: Boolean!
+  fromTeachable: Boolean!
+  expirationDate: Date!
+  isExpired: Boolean
+}
+
+type CourseType {
+  thumbnail: String
+
+  """140 max."""
+  name: String!
+
+  """140 max."""
+  subtitleOne: String!
+
+  """140 max."""
+  subtitleTwo: String!
+
+  """This is for the url of the website. Don't change without telling Nico."""
+  slug: String!
+
+  """Can people see this course?"""
+  isPublic: Boolean!
+
+  """Lynn's Space to write announcements."""
+  adminText: String!
+
+  """Lynn's Space to write announcements in English"""
+  enAdminText: String!
+  isFree: Boolean!
+  isForSale: Boolean!
+  isComplete: Boolean!
+  isComingSoon: Boolean!
+  isReward: Boolean!
+  isSubToWatch: Boolean!
+  unlockedBy: [BadgeType!]!
+  badges: [BadgeType!]!
+  level: LevelType!
+  requirements: [CourseType!]!
+  bonuses: [CourseType!]!
+
+  """In KRW"""
+  totalPrice: Int
+  sections: [SectionType!]!
+  isEnrolled: Boolean!
+  progress: Int!
+  progressLectures: Int!
+  canUnlock: Boolean!
+  unlockedByChallenges: [ChallengeType]
+  hasChallenge: Boolean!
+  promptChallenge: Boolean!
+  challengeInfo: String!
+  testimonials: [CommentType]!
+}
+
+type CreateNoteMutation {
+  note: NoteType
+}
+
+"""
+The `Date` scalar type represents a Date
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar Date
+
+"""
+The `DateTime` scalar type represents a DateTime
+value as specified by
+[iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+"""
+scalar DateTime
+
+type DayType {
+  id: ID!
+  assignment: AssignmentType
+  isBreak: Boolean!
+  sendEmail: Boolean!
+  day: Int!
+}
+
+type EnrollmentType {
+  id: ID!
+  course: CourseType!
+}
+
+type EnrollMutation {
+  enrollment: EnrollmentType
+}
+
+type FaQType {
+  question: String!
+  answer: String!
+}
+
+type GetNotesResponseType {
+  id: Int
+  notes: [NoteType]
+}
+
+type GlobalReportType {
+  progressList: [GlobalUserProgressType]
+}
+
+type GlobalUserProgressType {
+  username: String
+  submissions: [String]
+}
+
+type IssueCommentType {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  user: UserType!
+  issue: IssueType!
+  comment: String!
+  isSolution: Boolean!
+  isOwner: Boolean
+}
+
+"""An enumeration."""
+enum IssueStatus {
+  """Open"""
+  OPEN
+
+  """Solved"""
+  SOLVED
+}
+
+type IssueType {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  title: String!
+  user: UserType!
+  course: CourseType!
+  lecture: LectureType!
+  status: IssueStatus!
+  comment: String!
+  notificationSet: [NotificationType!]!
+  comments: [IssueCommentType]
+  isOwner: Boolean
+  absoluteUrl: String
+}
+
+type LectureType {
+  created: DateTime!
+  id: ID!
+  modified: DateTime!
+  cachedName: String
+  video: String
+  cloudfareId: String!
+  githubCommit: String
+  text: String
+  commentsEnabled: Boolean!
+  freePreview: Boolean!
+  duration: Int
+  section: SectionType!
+  course: CourseType!
+  isBonus: Boolean!
+  order: Int!
+  isPublished: Boolean!
+  completions: [CompletionType!]!
+  comments: [CommentType!]!
+  notes: [NoteType!]!
+  issues: [IssueType!]!
+  publicName: String
+  canSee: Boolean
+  isCompleted: Boolean
+  commentCount: Int!
+  noteCount: Int!
+  issueCount: Int!
+}
+
+type LevelType {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  name: String!
+
+  """Color from the Tailwind Pallete"""
+  color: String!
+  courseSet: [CourseType!]!
+}
+
+type LinkType {
+  text: String!
+  url: String!
+}
+
+type MarketingNotificationType {
+  text: String!
+  linkTo: String
+}
+
+type Mutation {
+  openThread(categorySlug: String!, payload: String, title: String!): OpenThreadMutation
+  editThread(payload: String, threadPk: Int!, title: String): MutationResponseType
+  replyOnThread(payload: String!, replyPk: Int, threadPk: Int): ReplyOnThreadMutation
+  editReply(payload: String!, replyPk: Int!): MutationResponseType
+  toggleForumUpvote(replyPk: Int, threadPk: Int): MutationResponseType
+  deleteThreadOrReply(replyPk: Int, threadPk: Int): MutationResponseType
+  checkNicePayment(couponPk: Int, courseSlug: String!, impUid: String!, merchantUid: String!, provider: String!): CheckNicePaymentMutation
+  couponByCode(couponCode: String!): CouponByCodeMutation
+  stripeCustomer: StripeCustomerMutation
+  stripeCharge(couponPk: String, courseSlug: String!, customerId: String!, installmentNumber: Int!, paymentMethodId: String!): StripeChargeMutation
+  stripeOneTime(courseSlug: String!, customerId: String!, token: String!): StripeOneTimePaymentMutation
+  completeChallengePayment(challengeSlug: String!, impUid: String!, merchantUid: String!, provider: String!): MutationResponseType
+  submitIssue(comment: String!, courseSlug: String!, lecturePk: Int!, title: String!): SubmitIssueMutation
+  deleteIssueOrComment(isIssue: Boolean!, objectId: Int!): MutationResponseType
+  markAsSolution(commentPk: Int!): MutationResponseType
+  commentOnIssue(comment: String!, issuePk: Int!): CommentOnIssueMutation
+  editTitle(issuePk: Int!, newTitle: String!): MutationResponseType
+  editIssueOrComment(isIssue: Boolean!, newComment: String!, objectId: Int!): MutationResponseType
+  answerQuiz(encodedAnswers: String!, quizPk: Int!): MutationResponseType
+  enroll(slug: String!): EnrollMutation
+  completeLecture(pk: Int!): MutationResponseType
+  postComment(content: String!, lecturePk: Int!, parentPk: Int): CommentMutation
+  deleteComment(pk: Int!): MutationResponseType
+  editComment(content: String!, pk: Int!): MutationResponseType
+  editNote(content: String!, notePk: Int!): MutationResponseType
+  createNote(content: String!, lecturePk: Int!, minutes: Int, seconds: Int): CreateNoteMutation
+  deleteNote(notePk: Int!): MutationResponseType
+  completeCourse(courseSlug: String!): CompleteCourseMutation
+  reportDuration(duration: Int!, lecturePk: Int!): MutationResponseType
+  unlockCourse(slug: String!): UnlockRewardCourse
+  toggleUpvote(commentPk: Int!): MutationResponseType
+  toggleTestimonial(commentPk: Int!): MutationResponseType
+  createAccount(email: String!, emailAgreed: Boolean!, enAccount: Boolean!, name: String!): MutationResponseType
+  initiateLogin(email: String!): MutationResponseType
+  editProfile(emailAgreed: Boolean!, githubUsername: String, name: String!, username: String!): MutationResponseType
+  initiateEmailUpdate(newEmail: String!): MutationResponseType
+  completeEmailUpdate(code: String!): MutationResponseType
+  deleteAccount: MutationResponseType
+  readNotification(notificationPk: Int!): MutationResponseType
+  submitLink(challengeSlug: String!, url: String!): MutationResponseType
+  joinChallenge(slug: String!): MutationResponseType
+  joinWaitlist(slug: String!): MutationResponseType
+  failedToWaitlist(slug: String!): MutationResponseType
+  leaveChallenge(slug: String!): MutationResponseType
+}
+
+type MutationResponseType {
+  ok: Boolean!
+  error: String
+}
+
+type NoteType {
+  created: DateTime!
+  id: ID!
+  lecture: LectureType!
+  content: String!
+  minutes: Int!
+  seconds: Int!
+}
+
+"""An enumeration."""
+enum NotificationKind {
+  """Comment"""
+  COMMENT
+
+  """Issue"""
+  ISSUE
+
+  """Post Reply"""
+  POST_REPLY
+
+  """Community Reply"""
+  COMMUNITY_REPLY
+
+  """Coupon Issue"""
+  COUPON_ISSUE
+
+  """Coupon Expiration"""
+  COUPON
+
+  """Marketing"""
+  MARKETING
+
+  """Certificate Issue"""
+  CERTIFICATE_ISSUE
+}
+
+type NotificationType {
+  created: DateTime!
+  id: ID!
+  actor: UserType
+  kind: NotificationKind!
+  seen: Boolean!
+  comment: CommentType
+  issue: IssueType
+  post: ThreadType
+  reply: ReplyType
+  marketingNotification: MarketingNotificationType
+  couponCta: String
+}
+
+type OpenThreadMutation {
+  thread: ThreadType
+  ok: Boolean!
+}
+
+"""An enumeration."""
+enum PaymentCurrency {
+  """USD"""
+  USD
+
+  """KRW"""
+  KRW
+}
+
+"""An enumeration."""
+enum PaymentProvider {
+  """Nice Pay"""
+  NICE
+
+  """Stripe"""
+  STRIPE
+
+  """Kakao Pay"""
+  KAKAO
+
+  """Bank Transfer"""
+  BANK
+}
+
+"""An enumeration."""
+enum PaymentStatus {
+  """Paid"""
+  PAID
+
+  """Refunded"""
+  REFUNDED
+}
+
+type PaymentType {
+  created: DateTime!
+  status: PaymentStatus!
+  provider: PaymentProvider!
+  impUid: String
+  impOrderUid: String
+  amount: Int!
+  receiptUrl: String
+  course: CourseType
+  challenge: ChallengeType
+  coupon: CouponType
+  currency: PaymentCurrency
+}
+
+type Query {
+  threads(page: Int!, newestFirst: Boolean!): ThreadListType
+  threadsByCategory(page: Int!, newestFirst: Boolean!, category: String!): ThreadListType
+  topFiveThreads(category: String!, popular: Boolean): [ThreadType]
+  latestHugis: [ThreadType]
+  latestProjects: [ThreadType]
+  threadCategories: [CategoryType]
+  thread(pk: Int!): ThreadType
+  threadReplies(threadPk: Int!, page: Int!): ThreadRepliesType
+  searchThreads(page: Int!, newestFirst: Boolean!, keyword: String!): ThreadListType
+  category(slug: String!): CategoryType
+  threadsByUser(username: String!, page: Int!): ThreadListType
+  paymentHistory: [PaymentType]
+  coupons: [CouponType]
+  myCoupons: [CouponType]
+  issue(issuePk: Int!): IssueType
+  response(pk: Int!): ResponseType
+  quiz(pk: Int!): QuizType
+  courses(allCourses: Boolean!): [CourseType]
+  course(slug: String!): CourseType
+  lecture(pk: Int!): LectureType
+  faqs(english: Boolean!): [FaQType]!
+  comment(commentPk: Int!): CommentType
+  comments(lecturePk: Int!, page: Int!, newestFirst: Boolean!): [CommentType]
+  notes(lecturePk: Int!): GetNotesResponseType
+  levels: [LevelType]
+  filterBadges: [BadgeType]
+  dashboardBadges: [BadgeType]
+  myNotes: [NoteType]
+  me: UserType
+  user(username: String!): UserType
+  cert(certUuid: String!): CertificateType
+  notifications: [NotificationType]
+  challenges(allChallenges: Boolean!): [ChallengeType]
+  bookChallenges: [ChallengeType]
+  challenge(slug: String!): ChallengeType
+  submission(challengeSlug: String!): SubmissionType
+  report(challengeSlug: String!): GlobalReportType
+  personalReport(challengeSlug: String!): ReportType
+  challengeFaqs: [ChallengeFAQType]
+  assignmentPreview(pk: Int!): AssignmentType
+  inProgress: [ChallengeType]
+}
+
+type QuestionType {
+  id: ID!
+  question: String!
+  choices: [ChoiceType!]!
+}
+
+type QuizType {
+  id: ID!
+
+  """This is for the admin to know the order."""
+  number: Int!
+  questions: [QuestionType!]!
+  response: ResponseType
+}
+
+type ReplyOnThreadMutation {
+  reply: ReplyType
+  childReply: ChildReplyType
+  ok: Boolean!
+}
+
+type ReplyType {
+  created: DateTime!
+  id: ID!
+  user: UserType!
+  payload: String!
+  isPinned: Boolean!
+  replies: [ChildReplyType]
+  totalVotes: Int!
+  isOwner: Boolean!
+  isUpvoted: Boolean!
+  totalReplies: Int!
+  absoluteUrl: String
+}
+
+type ReportType {
+  assignments: [AssignmentType]
+  progressList: [UserProgressType]
+}
+
+type ResponseType {
+  created: DateTime!
+  answers: [AnswerType!]!
+  totalScore: String
+}
+
+type SectionType {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  name: String!
+  order: Int!
+  course: CourseType!
+  isPublished: Boolean!
+  lectures: [LectureType]
+  publicName: String
+}
+
+type StripeChargeMutation {
+  enrollment: EnrollmentType
+  tId: String
+}
+
+type StripeCustomerMutation {
+  customerId: String
+}
+
+type StripeOneTimePaymentMutation {
+  enrollment: EnrollmentType
+}
+
+type SubmissionType {
+  url: String!
+  quizResponse: ResponseType
+}
+
+type SubmitIssueMutation {
+  issue: IssueType
+}
+
+type ThreadListType {
+  threads: [ThreadType]
+  totalPages: Int!
+}
+
+type ThreadRepliesType {
+  replies: [ReplyType]
+  totalPages: Int!
+}
+
+type ThreadType {
+  created: DateTime!
+  id: ID!
+  user: UserType!
+  category: CategoryType
+  title: String!
+  payload: String!
+  isPinned: Boolean
+  interviewImage: String
+  views: Int!
+  showing: Boolean!
+  totalVotes: Int!
+  totalReplies: Int!
+  isOwner: Boolean!
+  isUpvoted: Boolean!
+  absoluteUrl: String
+  preview: String
+}
+
+type UnlockRewardCourse {
+  enrollment: EnrollmentType
+}
+
+"""An enumeration."""
+enum UserAccountLanguage {
+  """English"""
+  EN
+
+  """Korean"""
+  KR
+}
+
+type UserBadgeType {
+  id: ID!
+  masterBadge: BadgeType!
+}
+
+type UserProgressType {
+  user: UserType
+  submissions: [SubmissionType]
+}
+
+type UserType {
+  """
+  Designates that this user has all permissions without explicitly assigning them.
+  """
+  isSuperuser: Boolean!
+
+  """Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."""
+  username: String!
+  dateJoined: Float
+  avatar: String
+  email: String!
+  name: String!
+  githubUsername: String!
+
+  """User agreed to receive marketing emails."""
+  emailAgreed: Boolean!
+  accountLanguage: UserAccountLanguage!
+  enrolledChallenges: [ChallengeType!]!
+  waitlistChallenges: [ChallengeType!]!
+  completedChallenges: [ChallengeType!]!
+  tier: Int!
+  enrollments: [EnrollmentType!]!
+  comments: [CommentType!]!
+  certificates: [CertificateType!]!
+  badges: [UserBadgeType!]!
+  notifications: Int
+  issues: [IssueType!]!
+  amazing: Boolean
+  rankingPosition: Float
+}
+
