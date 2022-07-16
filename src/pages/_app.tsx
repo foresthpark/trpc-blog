@@ -4,9 +4,24 @@ import type { AppRouter } from "../server/router";
 import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import "../styles/globals.css";
+import { loggerLink } from "@trpc/client/links/loggerLink";
+import { httpBatchLink } from "@trpc/client/links/httpBatchLink";
+import { url } from "../constants";
+import { trpc } from "../utils/trpc";
+import { UserContextProvider } from "../context/user.context";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  return <Component {...pageProps} />;
+  const { data, isLoading, error } = trpc.useQuery(["users.me"]);
+
+  if (isLoading) {
+    return <div>Loading User...</div>;
+  }
+
+  return (
+    <UserContextProvider value={data}>
+      <Component {...pageProps} />
+    </UserContextProvider>
+  );
 };
 
 const getBaseUrl = () => {
@@ -25,10 +40,34 @@ export default withTRPC<AppRouter>({
      * If you want to use SSR, you need to use the server's full URL
      * @link https://trpc.io/docs/ssr
      */
-    const url = `${getBaseUrl()}/api/trpc`;
+    // const url = `${getBaseUrl()}/api/trpc`;
+
+    const links = [
+      loggerLink(),
+      httpBatchLink({
+        maxBatchSize: 10,
+        url: url,
+      }),
+    ];
 
     return {
-      url,
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            staleTime: 60,
+          },
+        },
+      },
+      headers() {
+        if (ctx?.req) {
+          return {
+            ...ctx.req.headers,
+            "x-ssr": "1",
+          };
+        }
+        return {};
+      },
+      links,
       transformer: superjson,
       /**
        * @link https://react-query.tanstack.com/reference/QueryClient
